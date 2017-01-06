@@ -1,6 +1,7 @@
 from django.conf.urls import url
-from . import views
+from mapapp import views
 
 urlpatterns = [
-    url(r'^', views.index)
+    url(r'pointdata/', views.point_data),
+    url(r'^', views.index),
 ]
