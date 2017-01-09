@@ -5,27 +5,64 @@
     <title></title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.29.0/mapbox-gl.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.29.0/mapbox-gl.css' rel='stylesheet' />
     <style>
-        body { margin:0; padding:25%; box-sizing:border-box; }
-        #map { position:absolute; top:0; bottom:0; width:50%; height:50%; }
+        body { margin:0; padding:5%; box-sizing:border-box; }
+        #map { width:100%; height:300px; }
     </style>
 </head>
 <body>
 
-<div id='map'></div>
+<div id='map'>
 <script>
-mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kcmVhc2tvIiwiYSI6IjYxYTE2NDNjMTdlNThmZTcyMWZiMmRhMjZhMjM3YTQzIn0.0MSvtor9Xn95741ZRbshAA';
-var map = new mapboxgl.Map({
+    mapboxgl.accessToken =
+    'pk.eyJ1IjoiYW5kcmVhc2tvIiwiYSI6IjYxYTE2NDNjMTdlNThmZTcyMWZiMmRhMjZhMjM3YTQzIn0.0MSvtor9Xn95741ZRbshAA';
+    var map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'mapbox://styles/mapbox/streets-v9', //stylesheet location
     center: [13, 53], // starting position
     zoom: 15 // starting zoom
-});
+    });
 
-map.addControl(new mapboxgl.NavigationControl());
+    map.addControl(new mapboxgl.NavigationControl());
+
+    $.ajax({
+        url: 'http://127.0.0.1:8000/map/pointdata/',
+        success: function(response) {
+
+        //{
+        //var points = response.points
+        //for (var i = 0; i < points.length; i++) {
+
+           var el = document.createElement('div');
+           el.className = 'marker';
+           el.style.width = '10px';
+           el.style.height = '10px';
+           el.style.backgroundColor = 'red';
+
+            var marker = new mapboxgl.Marker(el)
+            .setLngLat(response['points'][0])
+            .addTo(map);
+
+    },
+    failure: function(response) {
+    console.log(response);
+        }
+
+    });
+
 </script>
 
+</div>
+
+<div>
+  <form action="map/" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit">
+  </form>
+</div>
 </body>
 </html>
 
